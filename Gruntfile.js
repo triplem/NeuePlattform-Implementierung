@@ -33,15 +33,37 @@ module.exports = function (grunt) {
 
       all: { src: ['test/**/*.js']}
     },
+    mochacov: {
+      coverage: {
+        options: {
+          globals: ['should'],
+          timeout: 3000,
+          ignoreLeaks: false,
+          ui: 'bdd',
+          reporter: 'html-cov',
+          output: 'docs/generated/coverage.html'
+        }
+      },
+      travis: {
+        coverage: {
+          options: {
+            globals: ['should'],
+            timeout: 3000,
+            ignoreLeaks: false,
+            coveralls: {
+              serviceName: 'travis-ci'
+            }
+          }
+        }
+      },
+      all: ['test/**/*.js']
+    },
     qunit: {
       files: ['frontendtests/*.html']
     },
     exec: {
       mkGenDocsDir: {
         command: 'mkdir -p docs/generated'
-      },
-      coverage: {
-        command: 'mocha --require blanket --reporter html-cov --slow 0 test/**/*.js > docs/generated/coverage.html'
       }
     },
     clean: {
@@ -58,14 +80,15 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-exec');
+  grunt.loadNpmTasks('grunt-mocha-cov');
 
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'mocha-hack', 'qunit']);
 
   // Coverage tasks
-  grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'exec:coverage']);
+  grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'mochacov:coverage']);
 
   // Travis-CI task
-  grunt.registerTask('travis', ['default']);
+  grunt.registerTask('travis', ['default', 'mochacov:travis']);
 };
