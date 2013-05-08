@@ -36,25 +36,15 @@ module.exports = function (grunt) {
     mochacov: {
       coverage: {
         options: {
-          globals: ['should'],
-          timeout: 3000,
-          ignoreLeaks: false,
           ui: 'bdd',
           reporter: 'html-cov',
           output: 'docs/generated/coverage.html'
         }
       },
-      travis: {
-        coverage: {
-          options: {
-            globals: ['should'],
-            timeout: 3000,
-            ignoreLeaks: false,
-            coveralls: {
-              serviceName: 'travis-ci'
-            }
-          }
-        }
+      options: {
+        globals: ['should'],
+        timeout: 3000,
+        ignoreLeaks: false
       },
       all: ['test/**/*.js']
     },
@@ -90,5 +80,5 @@ module.exports = function (grunt) {
   grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'mochacov:coverage']);
 
   // Travis-CI task
-  grunt.registerTask('travis', ['jshint', 'qunit', 'mochacov:travis']);
+  grunt.registerTask('travis', ['default']);
 };
