@@ -90,5 +90,5 @@ module.exports = function (grunt) {
   grunt.registerTask('coverage', ['clean', 'exec:mkGenDocsDir', 'mochacov:coverage']);
 
   // Travis-CI task
-  grunt.registerTask('travis', ['default', 'mochacov:travis']);
+  grunt.registerTask('travis', ['jshint', 'qunit', 'mochacov:travis']);
 };
